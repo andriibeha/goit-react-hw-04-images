@@ -1,13 +1,84 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 import Button from "components/Button/Button";
 import ImageGalleryItem from "components/ImageGalleryItem/ImageGalleryItem";
 import Loader from "components/Loader/Loader";
 import fetchImage from "services/api";
-
 import s from "./ImageGallery.module.css"
 
 
-class ImageGallery extends Component {
+
+
+
+function ImageGallery({query, page, onClickMore}) {
+    const [listImage, setListImage] = useState([]);
+    const [status, setStatus] = useState("idle");
+
+    const apiKey = "27740516-006db8c520e637ee9ea683b0c";
+    const url = `https://pixabay.com/api/?q=${query}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`;
+
+    useEffect(() => {
+        if (query === "") {
+            return
+        };
+
+        setStatus("pending");
+
+        fetchImage(url)
+            .then(data => {
+                setListImage([...data.hits]);
+                setStatus("resolve")
+            })
+    }, [])
+
+    useEffect(() => {
+        if (query === "") {
+            return
+        };
+
+        fetchImage(url)
+            .then(data => {
+                setListImage([...listImage, ...data.hits]);
+                setStatus("resolve")
+            })
+    }, [query, page])
+
+    if (status === "idle") { 
+            return (
+                <ul className={s.ImageGallery}>
+                    <div className={s.ImageGalleryIdle}>Wrote image name pls</div>
+                </ul>)
+        };
+
+        if (status === "pending") { 
+            return (
+                <ul className={s.ImageGallery}>
+                    {listImage.map((item) => (<ImageGalleryItem key={item.id} item={item} />))}
+                    <Loader />
+                </ul>
+            )
+        };
+
+        if (status === "resolve") { 
+            return (
+                <ul className={s.ImageGallery}>
+                    {listImage.map((item) => (<ImageGalleryItem key={item.id} item={item} />))}
+                    <Button onClickMore={onClickMore} />
+                </ul>
+            )
+        };
+
+        if (status === "rejected") { 
+            return (
+                <ul className={s.ImageGallery}>
+                    <div>Image name wrong</div>
+                </ul>   
+            )
+        };
+};
+
+export default ImageGallery;
+
+/* class ImageGallery extends Component {
     state = {
         listImage: [],
         error: null,
@@ -32,7 +103,7 @@ class ImageGallery extends Component {
                             status: "resolve"
                         })))
                 .catch(error => this.setState({error: error, status: "rejected"})) 
-                    .finally(() => this.setState({ loading: false }))
+                .finally(() => this.setState({ loading: false }))
                 return
                 
             };
@@ -86,5 +157,5 @@ class ImageGallery extends Component {
         };
     }
 }
- 
-export default ImageGallery;
+  */
+

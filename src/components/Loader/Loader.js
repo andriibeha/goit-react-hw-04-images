@@ -1,13 +1,11 @@
 import React, { Component } from "react";
-import s from "./Loader.module.css"
+import s from "./Loader.module.css";
 
-class Loader extends Component {
+function Loader() {
 
-    render() { 
-        return (
-            <div className={s.Loader}></div>
-        );
-    }
-}
+    return (
+        <div className={s.Loader}></div>
+    );
+};
  
 export default Loader;
