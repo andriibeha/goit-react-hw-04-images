@@ -23,23 +23,23 @@ function ImageGallery({query, page, onClickMore}) {
 
         setStatus("pending");
 
-        fetchImage(url)
+        if (page === 1) {
+            fetchImage(url)
             .then(data => {
-                setListImage([...data.hits]);
+                setListImage([ ...data.hits]);
                 setStatus("resolve")
             })
-    }, [])
-
-    useEffect(() => {
-        if (query === "") {
-            return
-        };
+        } 
 
         fetchImage(url)
             .then(data => {
                 setListImage([...listImage, ...data.hits]);
                 setStatus("resolve")
             })
+        
+        return () => {
+            setStatus("pending");
+        }
     }, [query, page])
 
     if (status === "idle") { 
