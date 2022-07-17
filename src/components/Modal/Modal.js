@@ -4,8 +4,9 @@ import s from "./Modal.module.css"
 
 
 function Modal({ largeImg, onClose }) {
-    const modalRoot = useRef(null);
-    modalRoot.current = document.querySelector('#modal-root');
+    const modalRoot = useRef(document.querySelector('#modal-root'));
+    /* modalRoot.current = document.querySelector('#modal-root'); */
+
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -33,7 +34,7 @@ function Modal({ largeImg, onClose }) {
                 <img src={largeImg} alt="Big" />
             </div>
         </div>
-        , modalRoot);
+        , modalRoot.current);
 };
 
 export default Modal;
