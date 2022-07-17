@@ -10,17 +10,19 @@ function App() {
 
   const handleFormSubmit = (query) => {
     setQuery(query);
+    setPage(1);
   };
 
-  const handleClickLoadMore = () => {
-    setPage(prevState => prevState + 1);
-  };
+     const handleClickLoadMore = () => {
+        setPage(prevState => prevState + 1);
+    };
+
 
   return (
     <div className={s.App}>
       <Searchbar onSubmit={handleFormSubmit} />
         
-      <ImageGallery query={query} page={page} onClickMore={handleClickLoadMore} />
+      <ImageGallery query={query} page={page} onClick={handleClickLoadMore} />
     </div>
   );
 };

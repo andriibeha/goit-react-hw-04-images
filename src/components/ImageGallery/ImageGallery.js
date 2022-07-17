@@ -9,7 +9,7 @@ import s from "./ImageGallery.module.css"
 
 
 
-function ImageGallery({query, page, onClickMore}) {
+function ImageGallery({query, page, onClick}) {
     const [listImage, setListImage] = useState([]);
     const [status, setStatus] = useState("idle");
 
@@ -21,26 +21,24 @@ function ImageGallery({query, page, onClickMore}) {
             return
         };
 
-        setStatus("pending");
+        console.log("use")
 
-        if (page === 1) {
-            fetchImage(url)
-            .then(data => {
-                setListImage([ ...data.hits]);
-                setStatus("resolve")
-            })
-        } 
-
-        fetchImage(url)
-            .then(data => {
-                setListImage([...listImage, ...data.hits]);
-                setStatus("resolve")
-            })
-        
-        return () => {
+        const fetchApi = (url) => {
+            console.log("fetch")
             setStatus("pending");
-        }
-    }, [query, page])
+
+            fetchImage(url)
+                .then(data => {
+                    setListImage(prevState => [...prevState, ...data.hits]);
+                    setStatus("resolve")
+                });
+        };
+
+        fetchApi(url);
+
+    }, [url, query])
+
+ 
 
     if (status === "idle") { 
             return (
@@ -62,7 +60,7 @@ function ImageGallery({query, page, onClickMore}) {
             return (
                 <ul className={s.ImageGallery}>
                     {listImage.map((item) => (<ImageGalleryItem key={item.id} item={item} />))}
-                    <Button onClickMore={onClickMore} />
+                    <Button onClickMore={onClick} />
                 </ul>
             )
         };
