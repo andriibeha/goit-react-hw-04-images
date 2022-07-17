@@ -5,22 +5,24 @@ import s from "./Modal.module.css"
 
 function Modal({ largeImg, onClose }) {
     const modalRoot = useRef(document.querySelector('#modal-root'));
-    /* modalRoot.current = document.querySelector('#modal-root'); */
 
+    
 
     useEffect(() => {
+        const handleKeyDown = e => {
+        if (e.code === 'Escape') {
+            onClose();
+        };
+        };
+        
         window.addEventListener('keydown', handleKeyDown);
 
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [onClose]);
 
-    const handleKeyDown = e => {
-        if (e.code === 'Escape') {
-            onClose();
-        };
-    };
+    
 
     const handleClickBackdrop = e => {
         if (e.target.nodeName !== 'IMG') {
