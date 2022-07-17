@@ -13,18 +13,17 @@ function ImageGallery({query, page, onClick}) {
     const [listImage, setListImage] = useState([]);
     const [status, setStatus] = useState("idle");
 
-    const apiKey = "27740516-006db8c520e637ee9ea683b0c";
-    const url = `https://pixabay.com/api/?q=${query}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`;
+   
 
     useEffect(() => {
+        const apiKey = "27740516-006db8c520e637ee9ea683b0c";
+        const url = `https://pixabay.com/api/?q=${query}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`;
+        
         if (query === "") {
             return
         };
 
-        console.log("use")
-
-        const fetchApi = (url) => {
-            console.log("fetch")
+        if (page !== 1) { 
             setStatus("pending");
 
             fetchImage(url)
@@ -32,11 +31,16 @@ function ImageGallery({query, page, onClick}) {
                     setListImage(prevState => [...prevState, ...data.hits]);
                     setStatus("resolve")
                 });
+        } else { 
+            setStatus("pending");
+
+            fetchImage(url)
+                .then(data => {
+                    setListImage([...data.hits]);
+                    setStatus("resolve")
+                });
         };
-
-        fetchApi(url);
-
-    }, [url, query])
+    }, [page, query])
 
  
 
